@@ -2695,3 +2695,66 @@ html.motion-ready .reveal:not(.visible) .proj-link {
     color: #1e293b !important;
   }
 }
+
+
+/* Final page-fill pass: keep margins, use more of the A4 canvas. */
+@media print {
+  .site-header {
+    padding-bottom: 5.6mm !important;
+    margin-bottom: 5.6mm !important;
+  }
+
+  .profile {
+    padding-bottom: 5.4mm !important;
+    margin-bottom: 6mm !important;
+  }
+
+  .profile-text {
+    font-size: 9pt !important;
+    line-height: 1.5 !important;
+  }
+
+  .col-side,
+  .col-main {
+    gap: 5.4mm !important;
+  }
+
+  .sec-title {
+    padding-bottom: 2mm !important;
+    margin-bottom: 3.4mm !important;
+  }
+
+  .skill-group {
+    margin-bottom: 3mm !important;
+  }
+
+  .lang-inline {
+    gap: 2mm !important;
+  }
+
+  .course-list {
+    gap: 2.8mm !important;
+  }
+
+  .exp-sub {
+    margin-top: 3mm !important;
+    margin-bottom: 2.4mm !important;
+    padding-top: 2.2mm !important;
+  }
+
+  .tl-item {
+    padding-bottom: 4.2mm !important;
+  }
+
+  .tl-item.compact {
+    padding-bottom: 3.3mm !important;
+  }
+
+  .tl-item.micro {
+    padding-bottom: 2.6mm !important;
+  }
+
+  .tl-desc {
+    line-height: 1.38 !important;
+  }
+}
