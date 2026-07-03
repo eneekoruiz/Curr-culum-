@@ -103,9 +103,7 @@ module.exports = async function handler(request, response) {
     page.on('request', (route) => {
       const url = route.url();
       const resourceType = route.resourceType();
-      const skipResource = resourceType === 'font' ||
-        url.includes('fonts.googleapis.com') ||
-        url.includes('fonts.gstatic.com') ||
+      const skipResource =
         url.endsWith('/gsap.min.js') ||
         url.endsWith('/manifest.json') ||
         url.endsWith('/sw.js');
@@ -145,7 +143,7 @@ module.exports = async function handler(request, response) {
 
       await Promise.race([
         Promise.all([fontReady, imageReady]),
-        new Promise((resolve) => setTimeout(resolve, 450))
+        new Promise((resolve) => setTimeout(resolve, 1200))
       ]);
     });
     await new Promise(resolve => setTimeout(resolve, 40));

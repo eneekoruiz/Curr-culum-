@@ -2758,3 +2758,214 @@ html.motion-ready .reveal:not(.visible) .proj-link {
     line-height: 1.38 !important;
   }
 }
+
+
+/* Recruiter handoff polish: deterministic entrance and PDF closer to the HTML canvas. */
+@keyframes cvBootIn {
+  0% { opacity: 0; transform: translateY(10px); filter: blur(8px); }
+  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+html:not(.pdf-render) #root-container {
+  animation: cvBootIn 460ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:not(.pdf-render) #root-container {
+    animation: none;
+  }
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+
+  html,
+  body,
+  #root-container,
+  #main-content {
+    width: 210mm !important;
+    height: 297mm !important;
+    overflow: hidden !important;
+    background: #fff !important;
+  }
+
+  .wrapper {
+    width: 210mm !important;
+    height: 297mm !important;
+    max-width: none !important;
+    padding: 13mm 12mm 11mm !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    background: #fff !important;
+  }
+
+  .site-header {
+    grid-template-columns: minmax(0, 1fr) 58mm !important;
+    gap: 7mm !important;
+    padding-bottom: 5.2mm !important;
+    margin-bottom: 5.2mm !important;
+  }
+
+  .eyebrow {
+    font-size: 6.8pt !important;
+    letter-spacing: .24em !important;
+    margin-bottom: 2.3mm !important;
+  }
+
+  h1 {
+    font-size: 30pt !important;
+    line-height: .98 !important;
+    letter-spacing: 0 !important;
+  }
+
+  .tagline {
+    margin-top: 2.6mm !important;
+    font-size: 8.2pt !important;
+    line-height: 1.28 !important;
+  }
+
+  .contacts {
+    gap: 1.1mm !important;
+  }
+
+  .contact-row {
+    font-size: 7.7pt !important;
+    padding: .9mm 0 !important;
+  }
+
+  .profile {
+    grid-template-columns: 18mm 1fr !important;
+    gap: 5.5mm !important;
+    padding-bottom: 5mm !important;
+    margin-bottom: 5.6mm !important;
+  }
+
+  .profile-text {
+    font-size: 9pt !important;
+    line-height: 1.48 !important;
+  }
+
+  .dashboard {
+    grid-template-columns: 54mm minmax(0, 1fr) !important;
+    gap: 7.5mm !important;
+  }
+
+  .col-side,
+  .col-main {
+    gap: 4.9mm !important;
+  }
+
+  .sec-title {
+    font-size: 6.7pt !important;
+    letter-spacing: .22em !important;
+    padding-bottom: 1.9mm !important;
+    margin-bottom: 3mm !important;
+  }
+
+  .proj-link,
+  .pill,
+  .lang-chip em {
+    border-radius: 999px !important;
+    background: #f8fafc !important;
+  }
+
+  .proj-link {
+    gap: 1.8mm !important;
+    padding: 1.35mm 2.6mm !important;
+    font-size: 7.25pt !important;
+  }
+
+  .qr-print {
+    display: inline-flex !important;
+    padding: 1.35mm 2.4mm 1.35mm 1.4mm !important;
+  }
+
+  .qr-img {
+    width: 14mm !important;
+    height: 14mm !important;
+  }
+
+  .skill-group {
+    margin-bottom: 2.7mm !important;
+  }
+
+  .sg-label {
+    font-size: 6.1pt !important;
+    margin-bottom: 1.2mm !important;
+  }
+
+  .pill {
+    padding: 1.05mm 2.4mm !important;
+    font-size: 7.2pt !important;
+  }
+
+  .pill.key {
+    font-size: 6.8pt !important;
+  }
+
+  .lang-inline {
+    gap: 1.8mm !important;
+  }
+
+  .lang-chip {
+    grid-template-columns: minmax(22mm, 1fr) auto !important;
+    gap: 2mm !important;
+    padding: .8mm 0 !important;
+  }
+
+  .lang-chip strong,
+  .course-name {
+    font-size: 7.6pt !important;
+  }
+
+  .lang-chip em {
+    min-height: 0 !important;
+    padding: .75mm 1.8mm !important;
+    border: 1px solid #d8c1a0 !important;
+    color: #1e293b !important;
+    font-size: 6.9pt !important;
+    line-height: 1 !important;
+  }
+
+  .course-list {
+    gap: 2.4mm !important;
+  }
+
+  .exp-sub {
+    margin-top: 2.6mm !important;
+    margin-bottom: 2.1mm !important;
+    padding-top: 2mm !important;
+    font-size: 5.9pt !important;
+  }
+
+  .tl-item {
+    grid-template-columns: 21mm minmax(0, 1fr) !important;
+    gap: 3.4mm !important;
+    padding-bottom: 3.7mm !important;
+  }
+
+  .tl-item.compact {
+    padding-bottom: 3mm !important;
+  }
+
+  .tl-item.micro {
+    padding-bottom: 2.2mm !important;
+  }
+
+  .tl-title {
+    font-size: 8.25pt !important;
+    line-height: 1.2 !important;
+  }
+
+  .tl-org {
+    font-size: 7.2pt !important;
+  }
+
+  .tl-desc {
+    font-size: 7.35pt !important;
+    line-height: 1.34 !important;
+  }
+}

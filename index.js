@@ -378,7 +378,7 @@ const forcePrintReadyState = () => {
   document.querySelectorAll('.reveal').forEach(element => element.classList.add('visible'));
 };
 
-const STATIC_PDF_VERSION = '20260703-final';
+const STATIC_PDF_VERSION = '20260704-html-faithful';
 
 const getPdfDownloadUrl = () => {
   if ((currentLang || 'es') === 'es') {
