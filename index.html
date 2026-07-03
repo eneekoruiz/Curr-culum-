@@ -79,8 +79,6 @@
 
 <body>
   <!-- Custom Magnetic Cursor -->
-  <div class="cursor-dot" aria-hidden="true"></div>
-  <div class="cursor-outline" aria-hidden="true"></div>
 
   <div id="scroll-progress" aria-hidden="true"></div>
   <div class="precision-motion" aria-hidden="true">
@@ -263,7 +261,7 @@
           <section class="reveal" aria-labelledby="h-projects">
             <h2 class="sec-title" id="h-projects" data-i18n="projects_title">Proyectos y Código</h2>
             <div class="project-links">
-              <a class="proj-link hide-print magnetic glass-card" href="https://eneko-ruiz.vercel.app" target="_blank" rel="noopener noreferrer me">
+              <a class="proj-link hide-print" href="https://eneko-ruiz.vercel.app" target="_blank" rel="noopener noreferrer me">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
                   stroke="currentColor" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round"
@@ -271,14 +269,14 @@
                 </svg>
                 <span data-i18n="proj_portfolio">Portfolio Interactivo</span>
               </a>
-              <a class="proj-link magnetic glass-card" href="https://github.com/eneekoruiz" target="_blank" rel="noopener noreferrer me">
+              <a class="proj-link" href="https://github.com/eneekoruiz" target="_blank" rel="noopener noreferrer me">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path
                     d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
                 </svg>
                 <span data-i18n="proj_github">GitHub: eneekoruiz</span>
               </a>
-              <a class="proj-link magnetic glass-card" href="https://linkedin.com/in/eneekoruiz" target="_blank"
+              <a class="proj-link" href="https://linkedin.com/in/eneekoruiz" target="_blank"
                 rel="noopener noreferrer me">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path
@@ -286,11 +284,11 @@
                 </svg>
                 <span data-i18n="proj_linkedin">LinkedIn: eneekoruiz</span>
               </a>
-              <a class="proj-link qr-print magnetic glass-card" href="https://eneko-ruiz-curriculum.vercel.app" target="_blank"
+              <a class="proj-link qr-print" href="https://eneko-ruiz.vercel.app" target="_blank"
                 rel="noopener noreferrer me" aria-label="Abrir portfolio interactivo desde QR">
                 <img
-                  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQAQMAAAC032DuAAAABlBMVEX6+PUWEhClesHMAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA20lEQVQokX3SvQ3EIAwFYEcUdNwCSFnDRSRWSha45BZIVkp3ayB5gaSjQLzj/jocV19lHraJmhVQyBQGskImx3KmSINGrGQeu5QLhjjSJa0f+YLkgsH/4QZrXpb1H73BWlYe6ffpBgM20Aw/7Qo5T3t27DuNNs8pzk8/ZYUUp2QW8jVvm9aUIIBsWSFT9/TEnzgKnZUNOLNGWay/AcugkRz1JdTtKfzOKplD42fqB7/ztvluRl0yp0qs3APYdp2hthRknRxHpvugsd5vvKX+0FjzBlNs/z2jazbrBfbPcOMGMxViAAAAAElFTkSuQmCC"
-                  alt="QR eneko-ruiz-curriculum.vercel.app" width="34" height="34" class="qr-img"
+                  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKQAAACkCAAAAAA83tqdAAAB80lEQVR42u2c22oDMQxErZL//+XpUyEYWxp5HWjpyVuz2eUQTXQZ2w2N3//6GkACCSSQQAIJJJBAAgkkkEAC+SchX7sLkdykt8/o7bOa7tX0HJnPJdxosqORWFxXotnsuvsbINxostLgSkOr3Dm/5zyXcKPJJzcr0ea7FrXRJeEG8rYmw8ybhBvIm5rUwawz58hR5FPCDaSrSSfHzf3jrM+qlyTcQLqa1OjV7t18owf5kXD/S8iQkf+qmr3SqRo5krkbSFeTqxm78h47tXk1oxNuNCmjNivJg6f1nhkHyNPavcphK10qmXmyXOt4l4QbTTrz9TD88pFot5MzCTeaHIn2ZPrjMvpK+kkgT/vJUdTqjufO3A3krbnb2fNT1ffdvfSTQHb7ySj2QqrwJ6PwjMiTQA5zT+9KTyq88Z+/d577Ttf0k0B29wWttKNEl+66j9NTEm40ma3fVL7ifK1a/8GfBLI746hYu6n8SRXzUnAeB8hDz7yzR8PxxoMzYkBePrdYrelkM47wJ4H8wLnFrG90ZxkRbiAvnlvcaSyS9cloeE6EG00+bkw3/uQwPHO8ICA/oUmZ641R7Pcg3Gjy9NxitRcyklrf3T9EuNGkM3tnfrm7D839XwSEe+BP8k0CCSSQQAIJJJBAAgkkkEACCeSN1zdNZb1FqGozVAAAAABJRU5ErkJggg=="
+                  alt="QR eneko-ruiz.vercel.app" width="34" height="34" class="qr-img"
                   loading="eager" onerror="this.style.display='none'" />
                 <span class="qr-text">
                   <span class="qr-title" data-i18n="proj_portfolio">Portfolio Interactivo</span>

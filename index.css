@@ -917,7 +917,7 @@ html[data-theme="dark"] #icon-moon {
 
 /* ── QR CODE ───────────────────────────────────────── */
 .qr-print {
-  display: inline-flex;
+  display: none;
 }
 
 /* ── HEADER ─────────────────────────────────────────── */
@@ -2254,3 +2254,347 @@ html.motion-ready .reveal:not(.visible) .proj-link {
   transform: translateZ(20px);
 }
 
+
+
+/* Final polish: faster interaction, true pill links, and single-page print export. */
+.proj-link {
+  border-radius: 999px;
+}
+
+.proj-link.qr-print {
+  display: none;
+  border-radius: 999px;
+}
+
+@media (pointer: fine) {
+  body {
+    cursor: auto;
+  }
+
+  .cursor-dot,
+  .cursor-outline {
+    display: none !important;
+  }
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 9mm 8mm;
+  }
+
+  html,
+  body {
+    width: auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    background: #fff !important;
+    color: #020617 !important;
+  }
+
+  body {
+    font-size: 10px !important;
+  }
+
+  #root-container,
+  #main-content {
+    width: 100% !important;
+    max-width: none !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    zoom: 1 !important;
+  }
+
+  .wrapper {
+    width: 100% !important;
+    max-width: none !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+
+  #topbar,
+  #scroll-progress,
+  .copy-tip,
+  .grain,
+  .portal-arrival,
+  .precision-motion,
+  .pdf-preview,
+  .hide-print,
+  #vcard-btn,
+  .site-footer {
+    display: none !important;
+  }
+
+  .site-header {
+    grid-template-columns: minmax(0, 1fr) 57mm !important;
+    gap: 6mm !important;
+    align-items: start !important;
+    padding-bottom: 4.5mm !important;
+    margin-bottom: 4.5mm !important;
+  }
+
+  .eyebrow {
+    font-size: 6.5pt !important;
+    letter-spacing: .22em !important;
+    margin-bottom: 2.2mm !important;
+  }
+
+  h1 {
+    font-size: 29pt !important;
+    line-height: .94 !important;
+    letter-spacing: 0 !important;
+  }
+
+  .tagline {
+    margin-top: 2.5mm !important;
+    gap: 1.5mm !important;
+    font-size: 7.8pt !important;
+    line-height: 1.25 !important;
+  }
+
+  .live-wrap {
+    display: none !important;
+  }
+
+  .contacts {
+    gap: 1mm !important;
+    align-items: flex-end !important;
+  }
+
+  .contact-row {
+    gap: 1.8mm !important;
+    margin: 0 !important;
+    padding: .8mm 0 !important;
+    font-size: 7.4pt !important;
+    line-height: 1.2 !important;
+    color: #334155 !important;
+    background: transparent !important;
+    transform: none !important;
+  }
+
+  .contact-row svg,
+  .proj-link svg {
+    width: 8.5pt !important;
+    height: 8.5pt !important;
+  }
+
+  .profile {
+    grid-template-columns: 17mm 1fr !important;
+    gap: 5mm !important;
+    padding-bottom: 4.3mm !important;
+    margin-bottom: 4.8mm !important;
+  }
+
+  .profile-label,
+  .sec-title,
+  .sg-label,
+  .exp-sub {
+    letter-spacing: .16em !important;
+  }
+
+  .profile-label {
+    font-size: 6.4pt !important;
+    padding-top: .8mm !important;
+  }
+
+  .profile-text {
+    font-size: 8.7pt !important;
+    line-height: 1.42 !important;
+  }
+
+  .dashboard {
+    grid-template-columns: 55mm minmax(0, 1fr) !important;
+    gap: 7mm !important;
+    margin: 0 !important;
+  }
+
+  .col-side,
+  .col-main {
+    gap: 4.2mm !important;
+  }
+
+  .sec-title {
+    font-size: 6.35pt !important;
+    padding-bottom: 1.6mm !important;
+    margin-bottom: 2.6mm !important;
+  }
+
+  .project-links {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 1.6mm !important;
+  }
+
+  .proj-link {
+    display: inline-flex !important;
+    width: auto !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+    gap: 1.7mm !important;
+    padding: 1.25mm 2.5mm !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 999px !important;
+    background: #f8fafc !important;
+    box-shadow: none !important;
+    font-size: 7.1pt !important;
+    line-height: 1.15 !important;
+    white-space: nowrap !important;
+    transform: none !important;
+  }
+
+  .qr-print {
+    display: inline-flex !important;
+    white-space: normal !important;
+    padding: 1.2mm 2.3mm 1.2mm 1.4mm !important;
+  }
+
+  .qr-img {
+    width: 13.5mm !important;
+    height: 13.5mm !important;
+    image-rendering: crisp-edges !important;
+  }
+
+  .qr-text {
+    gap: .5mm !important;
+    max-width: 31mm !important;
+  }
+
+  .qr-title {
+    font-size: 5.8pt !important;
+    letter-spacing: .05em !important;
+    line-height: 1.05 !important;
+  }
+
+  .qr-caption {
+    font-size: 5.7pt !important;
+    line-height: 1.12 !important;
+  }
+
+  .skill-group {
+    margin-bottom: 2.2mm !important;
+  }
+
+  .sg-label {
+    font-size: 5.9pt !important;
+    margin-bottom: 1mm !important;
+  }
+
+  .pills {
+    gap: 1.1mm !important;
+  }
+
+  .pill {
+    padding: 1mm 2.3mm !important;
+    border-radius: 999px !important;
+    font-size: 7pt !important;
+    line-height: 1.12 !important;
+    background: #f8fafc !important;
+  }
+
+  .pill.key {
+    font-size: 6.5pt !important;
+  }
+
+  .lang-inline {
+    gap: 1.4mm !important;
+  }
+
+  .lang-chip {
+    grid-template-columns: minmax(23mm, 1fr) auto !important;
+    gap: 2mm !important;
+    padding: .6mm 0 !important;
+  }
+
+  .lang-chip strong,
+  .course-name {
+    font-size: 7.4pt !important;
+    line-height: 1.18 !important;
+  }
+
+  .lang-chip em,
+  .course-inst {
+    font-size: 6.9pt !important;
+    line-height: 1.18 !important;
+  }
+
+  .course-list {
+    gap: 2mm !important;
+  }
+
+  .course-item {
+    padding-left: 2.6mm !important;
+  }
+
+  .exp-sub {
+    font-size: 5.7pt !important;
+    margin-top: 2.2mm !important;
+    margin-bottom: 2mm !important;
+    padding-top: 1.8mm !important;
+  }
+
+  .tl-item {
+    grid-template-columns: 21mm minmax(0, 1fr) !important;
+    gap: 3.3mm !important;
+    padding-bottom: 3.2mm !important;
+  }
+
+  .tl-item.compact {
+    padding-bottom: 2.6mm !important;
+  }
+
+  .tl-item.micro {
+    padding-bottom: 1.9mm !important;
+  }
+
+  .tl-date {
+    font-size: 6.1pt !important;
+    line-height: 1.18 !important;
+    padding-top: .6mm !important;
+  }
+
+  .tl-body {
+    padding-left: 2.8mm !important;
+  }
+
+  .tl-title {
+    font-size: 8.1pt !important;
+    line-height: 1.18 !important;
+    margin-bottom: .7mm !important;
+  }
+
+  .tl-org {
+    font-size: 7.1pt !important;
+    line-height: 1.18 !important;
+    margin-bottom: .8mm !important;
+  }
+
+  .tl-desc {
+    font-size: 7.25pt !important;
+    line-height: 1.32 !important;
+  }
+
+  .tl-mention {
+    margin-top: .8mm !important;
+    font-size: 7.8pt !important;
+    line-height: 1.18 !important;
+  }
+
+  .site-header,
+  .profile,
+  .col-main section,
+  .col-side section,
+  .tl-item,
+  .course-item,
+  .skill-group {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+}

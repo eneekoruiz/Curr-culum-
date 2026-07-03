@@ -102,19 +102,34 @@ module.exports = async function handler(request, response) {
     page.setDefaultTimeout(15000);
 
     await page.goto(targetUrl.toString(), {
-      waitUntil: 'networkidle2',
-      timeout: 15000
+      waitUntil: 'domcontentloaded',
+      timeout: 12000
     });
 
     await page.emulateMediaType('print');
     await page.evaluate(async () => {
-      document.documentElement.classList.add('pdf-render');
+      document.documentElement.classList.add('pdf-render', 'print-ready');
       document.querySelectorAll('.reveal').forEach((element) => element.classList.add('visible'));
-      if (document.fonts && document.fonts.ready) {
-        await document.fonts.ready;
-      }
+      window.scrollTo(0, 0);
+
+      const fontReady = document.fonts && document.fonts.ready
+        ? document.fonts.ready
+        : Promise.resolve();
+      const imageReady = Promise.all(
+        Array.from(document.images).map((image) => {
+          if (image.complete) {
+            return Promise.resolve();
+          }
+          return image.decode ? image.decode().catch(() => {}) : Promise.resolve();
+        })
+      );
+
+      await Promise.race([
+        Promise.all([fontReady, imageReady]),
+        new Promise((resolve) => setTimeout(resolve, 900))
+      ]);
     });
-    await new Promise(resolve => setTimeout(resolve, 180));
+    await new Promise(resolve => setTimeout(resolve, 80));
 
     const pdfBuffer = await page.pdf({
       format: 'A4',

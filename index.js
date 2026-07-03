@@ -12,11 +12,11 @@ let currentLang = 'es';
 let themeTransitionTimeout = null;
 
 const PRECISION_MOTION = {
-  duration: 1.4,
-  revealDuration: 0.56,
-  childDuration: 0.42,
-  stagger: 0.035,
-  initialDelay: 1.32,
+  duration: 0.7,
+  revealDuration: 0.32,
+  childDuration: 0.24,
+  stagger: 0.018,
+  initialDelay: 0.08,
   ease: cubicBezier(0.42, 0, 0.16, 1)
 };
 
@@ -269,6 +269,8 @@ const applyTranslations = (langCode) => {
     menuItem.classList.toggle('active', isActive);
     menuItem.setAttribute('aria-selected', isActive ? 'true' : 'false');
   });
+
+  updateExportButtonLabel();
 };
 
 /**
@@ -321,6 +323,59 @@ const getRuntimeContext = () => {
   return { isEmbedded, isMobile, isIOS, isSafari };
 };
 
+const EXPORT_COPY = {
+  es: {
+    print: 'Imprimir CV',
+    download: 'Descargar PDF',
+    preparing: 'Generando PDF...',
+    printing: 'Abriendo impresión...',
+    ready: 'PDF descargado',
+    opening: 'Abriendo PDF...',
+    failed: 'No se pudo generar el PDF',
+    ariaPrint: 'Imprimir versión PDF',
+    ariaDownload: 'Descargar versión PDF'
+  },
+  default: {
+    print: 'Print CV',
+    download: 'Download PDF',
+    preparing: 'Building PDF...',
+    printing: 'Opening print...',
+    ready: 'PDF downloaded',
+    opening: 'Opening PDF...',
+    failed: 'PDF export failed',
+    ariaPrint: 'Print PDF version',
+    ariaDownload: 'Download PDF version'
+  }
+};
+
+const getExportCopy = () => EXPORT_COPY[currentLang] || EXPORT_COPY.default;
+const shouldUsePdfDownload = () => {
+  const { isEmbedded, isMobile } = getRuntimeContext();
+  return isEmbedded || isMobile || typeof window.print !== 'function';
+};
+
+const getPrintButtonLabel = (printButton = document.getElementById('print-btn')) => {
+  if (!printButton) {
+    return null;
+  }
+
+  return Array.from(printButton.children).find(child => child.tagName === 'SPAN') || null;
+};
+
+const updateExportButtonLabel = (forcedText = '') => {
+  const printButton = document.getElementById('print-btn');
+  const statusLabel = getPrintButtonLabel(printButton);
+  if (!printButton || !statusLabel) {
+    return;
+  }
+
+  const copy = getExportCopy();
+  const downloadMode = shouldUsePdfDownload();
+  statusLabel.textContent = forcedText || (downloadMode ? copy.download : copy.print);
+  printButton.setAttribute('aria-label', downloadMode ? copy.ariaDownload : copy.ariaPrint);
+  printButton.dataset.exportMode = downloadMode ? 'download' : 'print';
+};
+
 const forcePrintReadyState = () => {
   document.documentElement.classList.add('print-ready');
   document.querySelectorAll('.reveal').forEach(element => element.classList.add('visible'));
@@ -349,22 +404,28 @@ const openPdfDirectly = (pdfUrl) => {
 const downloadGeneratedPdf = async (printButton, options = {}) => {
   const pdfUrl = getPdfDownloadUrl();
   const runtime = getRuntimeContext();
+  const copy = getExportCopy();
 
   if (runtime.isEmbedded && window.parent) {
     window.parent.postMessage({ type: 'cv-download-pdf', url: pdfUrl }, '*');
+    window.parent.postMessage({ type: 'cv-download-pdf-start', url: pdfUrl }, '*');
   }
 
   if (options.preferDirect || runtime.isIOS) {
-    showCopyTip(printButton, currentLang === 'es' ? 'Abriendo PDF...' : 'Opening PDF...');
+    showCopyTip(printButton, copy.opening);
     openPdfDirectly(pdfUrl);
     return;
   }
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 28000);
 
   try {
     const response = await fetch(pdfUrl, {
       method: 'GET',
       cache: 'no-store',
-      headers: { Accept: 'application/pdf' }
+      headers: { Accept: 'application/pdf' },
+      signal: controller.signal
     });
 
     if (!response.ok) {
@@ -379,18 +440,27 @@ const downloadGeneratedPdf = async (printButton, options = {}) => {
     const objectUrl = URL.createObjectURL(pdfBlob);
     const link = document.createElement('a');
     link.href = objectUrl;
-    link.download = 'Eneko_Ruiz_CV.pdf';
+    link.download = `Eneko_Ruiz_CV_${(currentLang || 'es').toUpperCase()}.pdf`;
     link.rel = 'noopener';
     document.body.appendChild(link);
     link.click();
     link.remove();
 
+    if (runtime.isEmbedded && window.parent) {
+      window.parent.postMessage({ type: 'cv-download-pdf-ready', url: pdfUrl }, '*');
+    }
+
     setTimeout(() => URL.revokeObjectURL(objectUrl), 15000);
-    showCopyTip(printButton, currentLang === 'es' ? 'PDF preparado' : 'PDF ready');
+    showCopyTip(printButton, copy.ready);
   } catch (error) {
     console.error('Blob PDF download failed; falling back to direct PDF navigation:', error);
-    showCopyTip(printButton, currentLang === 'es' ? 'Abriendo PDF...' : 'Opening PDF...');
+    if (runtime.isEmbedded && window.parent) {
+      window.parent.postMessage({ type: 'cv-download-pdf-fallback', url: pdfUrl }, '*');
+    }
+    showCopyTip(printButton, copy.opening);
     openPdfDirectly(pdfUrl);
+  } finally {
+    clearTimeout(timeoutId);
   }
 };
 /* ── CORE ACTIONS ─────────────────────────────────────────────── */
@@ -417,30 +487,26 @@ window.handlePrint = async () => {
     navigator.vibrate(5);
   }
 
-  const statusLabel = printButton.querySelector('span');
-  const originalButtonText = statusLabel ? statusLabel.textContent : '';
-  const { isEmbedded, isMobile, isIOS, isSafari } = getRuntimeContext();
-  const shouldUsePdfDownload = isEmbedded || isMobile || typeof window.print !== 'function';
+  const statusLabel = getPrintButtonLabel(printButton);
+  const { isEmbedded, isIOS, isSafari } = getRuntimeContext();
+  const usePdfDownload = shouldUsePdfDownload();
+  const copy = getExportCopy();
 
   const resetPrintButton = () => {
-    if (statusLabel) {
-      statusLabel.textContent = originalButtonText;
-    }
     printButton.removeAttribute('data-loading');
+    updateExportButtonLabel();
   };
 
   printButton.setAttribute('data-loading', 'true');
   if (statusLabel) {
-    statusLabel.textContent = shouldUsePdfDownload
-      ? (currentLang === 'es' ? 'Preparando PDF...' : 'Preparing PDF...')
-      : (currentLang === 'es' ? 'Abriendo impresión...' : 'Opening print...');
+    statusLabel.textContent = usePdfDownload ? copy.preparing : copy.printing;
   }
 
   forcePrintReadyState();
 
   try {
-    if (shouldUsePdfDownload) {
-      await downloadGeneratedPdf(printButton, { preferDirect: isMobile || isIOS || isSafari });
+    if (usePdfDownload) {
+      await downloadGeneratedPdf(printButton, { preferDirect: isIOS || (isSafari && !isEmbedded) });
       resetPrintButton();
       return;
     }
@@ -450,12 +516,12 @@ window.handlePrint = async () => {
 
     setTimeout(() => {
       window.print();
-      setTimeout(cleanupAfterPrint, 1800);
-    }, 80);
+      setTimeout(cleanupAfterPrint, 1200);
+    }, 60);
   } catch (error) {
     console.error('CV export failed:', error);
     resetPrintButton();
-    showCopyTip(printButton, currentLang === 'es' ? 'No se pudo generar el PDF' : 'PDF export failed');
+    showCopyTip(printButton, copy.failed);
   }
 };
 
@@ -773,15 +839,18 @@ const setupSurfacePolish = () => {
 
   const bootParameters = new URLSearchParams(window.location.search);
   const isPdfRender = bootParameters.has('pdf');
-  const shouldAnimateMotion = !isPdfRender && Boolean(window.gsap) &&
+  const runtimeContext = getRuntimeContext();
+  const shouldAnimateMotion = !isPdfRender && !runtimeContext.isEmbedded && Boolean(window.gsap) &&
     !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   if (shouldAnimateMotion) {
     document.documentElement.classList.add('motion-ready');
   }
 
-  // Initialize magnetic controls
-  setupMagneticControls();
-  setupSurfacePolish();
+  // Initialize lightweight hover polish where it will not fight an iframe or touch viewport.
+  if (!runtimeContext.isEmbedded && !runtimeContext.isMobile) {
+    setupMagneticControls();
+    setupSurfacePolish();
+  }
 
   // Setup language dropdown menu list
   const languageMenu = document.getElementById('lang-menu');
@@ -1018,6 +1087,8 @@ const setupSurfacePolish = () => {
   const urlParameters = new URLSearchParams(window.location.search);
   const initialLang = urlParameters.get('lang') || safeStorage.get('cv-lang') || 'es';
   applyTranslations(initialLang);
+  updateExportButtonLabel();
+  window.addEventListener('resize', updateExportButtonLabel, { passive: true });
 
   if (urlParameters.has('pdf')) {
     forcePrintReadyState();
@@ -1129,7 +1200,7 @@ const setupSurfacePolish = () => {
 
   // --- PREMIUM UI INITIALIZATION ---
   const initPremiumUI = () => {
-    if (!window.matchMedia('(pointer: fine)').matches) return;
+    if (runtimeContext.isEmbedded || runtimeContext.isMobile || !window.matchMedia('(pointer: fine)').matches) return;
 
     const cursorDot = document.querySelector('.cursor-dot');
     const cursorOutline = document.querySelector('.cursor-outline');
