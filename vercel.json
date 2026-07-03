@@ -1,6 +1,19 @@
 {
   "headers": [
     {
+      "source": "/Eneko_Ruiz_CV_ES.pdf",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        },
+        {
+          "key": "Content-Disposition",
+          "value": "attachment; filename=Eneko_Ruiz_CV_ES.pdf"
+        }
+      ]
+    },
+    {
       "source": "/api/pdf",
       "headers": [
         {
@@ -48,7 +61,7 @@
   "rewrites": [
     {
       "source": "/CV_Eneko_Ruiz.pdf",
-      "destination": "/api/pdf"
+      "destination": "/Eneko_Ruiz_CV_ES.pdf"
     }
   ]
 }

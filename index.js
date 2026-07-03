@@ -378,7 +378,15 @@ const forcePrintReadyState = () => {
   document.querySelectorAll('.reveal').forEach(element => element.classList.add('visible'));
 };
 
+const STATIC_PDF_VERSION = '20260703-final';
+
 const getPdfDownloadUrl = () => {
+  if ((currentLang || 'es') === 'es') {
+    const staticPdfUrl = new URL('/Eneko_Ruiz_CV_ES.pdf', window.location.origin);
+    staticPdfUrl.searchParams.set('v', STATIC_PDF_VERSION);
+    return staticPdfUrl.toString();
+  }
+
   const pdfUrl = new URL('/api/pdf', window.location.origin);
   pdfUrl.searchParams.set('lang', currentLang || 'es');
   return pdfUrl.toString();
