@@ -1,4 +1,4 @@
-const CACHE_NAME = 'eneko-cv-cache-v3';
+const CACHE_NAME = 'eneko-cv-cache-v4';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -6,7 +6,6 @@ const ASSETS_TO_CACHE = [
   '/index.js',
   '/theme.js',
   '/translations.js',
-  '/gsap.min.js',
   '/manifest.json',
   '/icon-192.png',
   '/icon-512.png',

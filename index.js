@@ -349,10 +349,7 @@ const EXPORT_COPY = {
 };
 
 const getExportCopy = () => EXPORT_COPY[currentLang] || EXPORT_COPY.default;
-const shouldUsePdfDownload = () => {
-  const { isEmbedded, isMobile } = getRuntimeContext();
-  return isEmbedded || isMobile || typeof window.print !== 'function';
-};
+const shouldUsePdfDownload = () => true;
 
 const getPrintButtonLabel = (printButton = document.getElementById('print-btn')) => {
   if (!printButton) {
@@ -384,7 +381,6 @@ const forcePrintReadyState = () => {
 const getPdfDownloadUrl = () => {
   const pdfUrl = new URL('/api/pdf', window.location.origin);
   pdfUrl.searchParams.set('lang', currentLang || 'es');
-  pdfUrl.searchParams.set('v', Date.now().toString(36));
   return pdfUrl.toString();
 };
 
@@ -673,6 +669,13 @@ const _runCLI = () => {
  * @returns {string} success message
  */
 window.hire = function() {
+  const mailtoUrl = "mailto:eneekoruiz@gmail.com?subject=Propuesta%20Laboral%20%E2%80%94%20Eneko%20Ruiz&body=Hola%20Eneko%2C%0A%0AHe%20visto%20tu%20curr%C3%ADculum%20interactivo%20y%20me%20gustar%C3%ADa%20contactar%20contigo...";
+
+  if (!window.gsap) {
+    window.location.href = mailtoUrl;
+    return "Conexión establecida. ¡Suerte!";
+  }
+
   const confettiColors = ['#c4965a', '#334155', '#94a3b8', '#0f172a', '#475569'];
   const confettiContainer = document.createElement('div');
   Object.assign(confettiContainer.style, {
@@ -736,7 +739,7 @@ window.hire = function() {
   console.log("%c🚀 Iniciando conexión... Abriendo cliente de correo.", "color: #c4965a; font-size: 14px; font-weight: bold;");
   
   setTimeout(() => {
-    window.location.href = "mailto:eneekoruiz@gmail.com?subject=Propuesta%20Laboral%20%E2%80%94%20Eneko%20Ruiz&body=Hola%20Eneko%2C%0A%0AHe%20visto%20tu%20curr%C3%ADculum%20interactivo%20y%20me%20gustar%C3%ADa%20contactar%20contigo...";
+    window.location.href = mailtoUrl;
   }, 1200);
   
   return "🚀 Conexión establecida. ¡Suerte!";
@@ -840,8 +843,7 @@ const setupSurfacePolish = () => {
   const bootParameters = new URLSearchParams(window.location.search);
   const isPdfRender = bootParameters.has('pdf');
   const runtimeContext = getRuntimeContext();
-  const shouldAnimateMotion = !isPdfRender && !runtimeContext.isEmbedded && Boolean(window.gsap) &&
-    !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const shouldAnimateMotion = false;
   if (shouldAnimateMotion) {
     document.documentElement.classList.add('motion-ready');
   }

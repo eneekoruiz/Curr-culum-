@@ -96,14 +96,33 @@ module.exports = async function handler(request, response) {
 
     const browser = await getBrowser();
     page = await browser.newPage();
-    await page.setViewport({ width: 1080, height: 1528, deviceScaleFactor: 2 });
+    await page.setViewport({ width: 1080, height: 1528, deviceScaleFactor: 1 });
     await page.setCacheEnabled(true);
-    page.setDefaultNavigationTimeout(15000);
-    page.setDefaultTimeout(15000);
+    await page.setBypassServiceWorker(true);
+    await page.setRequestInterception(true);
+    page.on('request', (route) => {
+      const url = route.url();
+      const resourceType = route.resourceType();
+      const skipResource = resourceType === 'font' ||
+        url.includes('fonts.googleapis.com') ||
+        url.includes('fonts.gstatic.com') ||
+        url.endsWith('/gsap.min.js') ||
+        url.endsWith('/manifest.json') ||
+        url.endsWith('/sw.js');
+
+      if (skipResource) {
+        route.abort();
+        return;
+      }
+
+      route.continue();
+    });
+    page.setDefaultNavigationTimeout(10000);
+    page.setDefaultTimeout(10000);
 
     await page.goto(targetUrl.toString(), {
       waitUntil: 'domcontentloaded',
-      timeout: 12000
+      timeout: 10000
     });
 
     await page.emulateMediaType('print');
@@ -126,10 +145,10 @@ module.exports = async function handler(request, response) {
 
       await Promise.race([
         Promise.all([fontReady, imageReady]),
-        new Promise((resolve) => setTimeout(resolve, 900))
+        new Promise((resolve) => setTimeout(resolve, 450))
       ]);
     });
-    await new Promise(resolve => setTimeout(resolve, 80));
+    await new Promise(resolve => setTimeout(resolve, 40));
 
     const pdfBuffer = await page.pdf({
       format: 'A4',
@@ -143,7 +162,7 @@ module.exports = async function handler(request, response) {
     response.setHeader('Content-Type', 'application/pdf');
     response.setHeader('Content-Length', pdfBuffer.length);
     response.setHeader('Content-Disposition', `attachment; filename="Eneko_Ruiz_CV_${lang.toUpperCase()}.pdf"`);
-    response.setHeader('Cache-Control', 'no-store, max-age=0');
+    response.setHeader('Cache-Control', 'private, max-age=300, stale-while-revalidate=86400');
     response.setHeader('X-Content-Type-Options', 'nosniff');
     response.status(200).end(pdfBuffer);
   } catch (error) {

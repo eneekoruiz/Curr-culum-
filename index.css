@@ -2598,3 +2598,100 @@ html.motion-ready .reveal:not(.visible) .proj-link {
     page-break-inside: avoid !important;
   }
 }
+
+
+/* Final production pass: stable first paint, readable language levels, and controlled A4 canvas. */
+.precision-motion,
+.portal-arrival {
+  display: none !important;
+}
+
+.lang-chip {
+  align-items: center;
+}
+
+.lang-chip em {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 22px;
+  padding: 3px 9px;
+  border: 1px solid var(--c-key-bdr);
+  border-radius: 999px;
+  background: var(--c-key-bg);
+  color: var(--c-ink-2);
+  font-family: var(--f-mono);
+  font-size: 10.5px;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: .02em;
+  text-align: center;
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+
+  html,
+  body {
+    width: 210mm !important;
+    height: 297mm !important;
+    overflow: hidden !important;
+  }
+
+  #root-container,
+  #main-content {
+    width: 210mm !important;
+    height: 297mm !important;
+    overflow: hidden !important;
+  }
+
+  .wrapper {
+    width: 210mm !important;
+    height: 297mm !important;
+    padding: 10mm 9mm 9mm !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+
+  .dashboard {
+    grid-template-columns: 54mm minmax(0, 1fr) !important;
+    gap: 7.5mm !important;
+  }
+
+  .site-header {
+    padding-bottom: 4.8mm !important;
+    margin-bottom: 4.8mm !important;
+  }
+
+  .profile {
+    padding-bottom: 4.5mm !important;
+    margin-bottom: 5mm !important;
+  }
+
+  .qr-print {
+    display: inline-flex !important;
+  }
+
+  .project-links .hide-print {
+    display: none !important;
+  }
+
+  .lang-chip {
+    grid-template-columns: minmax(22mm, 1fr) auto !important;
+    align-items: center !important;
+    padding: .8mm 0 !important;
+  }
+
+  .lang-chip em {
+    min-height: 0 !important;
+    padding: .7mm 1.7mm !important;
+    font-size: 6.7pt !important;
+    line-height: 1 !important;
+    border: 1px solid #d8c1a0 !important;
+    background: #fbf7f1 !important;
+    color: #1e293b !important;
+  }
+}
